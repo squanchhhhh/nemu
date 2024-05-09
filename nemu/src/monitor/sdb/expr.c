@@ -43,7 +43,7 @@ static struct rule {
   {"\\d+", TK_NUM},     // digits
   {"-", TK_MINUS},      // minus
   {"/", TK_DIV},        // division
-  {"*",TK_MULT}
+  {"\\*",TK_MULT}
 };
 
 
