@@ -19,7 +19,9 @@
  * Type 'man regex' for more information about POSIX regex functions.
  */
 #include <regex.h>
-
+int check_parentheses(char *p, char *q);
+char *get_main_op_site(char *p, char *q);
+int eval(char *p,char*q);
 enum {
   TK_NOTYPE = 256, 
   TK_PLUS,
@@ -128,10 +130,99 @@ word_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-  for (int i = 0 ;i<nr_token;i++){
-    printf("%d-%s\n",tokens[i].type,tokens[i].str);
-  }
-  /* TODO: Insert codes to evaluate the expression. */
 
-  return 0;
+  // 分配足够的内存来存储连接后的字符串
+  char *final_expr = (char *)malloc(nr_token * 5 * sizeof(char));
+  final_expr[0] = '\0';  // 将字符串初始化为空字符串
+
+  // 使用 strcat 函数连接 token 字符串
+  for (int i = 0; i < nr_token; i++) {
+    printf("%d-%s\n", tokens[i].type, tokens[i].str);
+    strcat(final_expr, tokens[i].str);
+  }
+
+  /* TODO: Insert codes to evaluate the expression. */
+  word_t result = eval(final_expr, final_expr+ sizeof(final_expr) - 2);
+
+  free(final_expr);  // 释放动态分配的内存
+  return result;
+}
+
+int eval(char *p, char *q) {
+    if (p > q) {
+        printf("illegal\n");
+        assert(0);
+    } else if (p == q) {
+        if (*p >= '0' && *p <= '9') {
+            return *p - '0';
+        } else {
+            printf("illegal\n");
+            assert(0);
+        }
+    } else if (check_parentheses(p, q) == 1) {
+        return eval(p + 1, q - 1);
+    } else {
+        char *op = get_main_op_site(p, q);
+        if (op == NULL) {
+            printf("No valid operator found.\n");
+            assert(0);
+        }
+        int val1 = eval(p, op - 1);
+        int val2 = eval(op + 1, q);
+        switch (*op) {
+            case '+': return val1 + val2;
+            case '-': return val1 - val2;
+            case '*': return val1 * val2;
+            case '/':
+                if (val2 == 0) {
+                    printf("Division by zero.\n");
+                    assert(0);
+                }
+                return val1 / val2;
+            default:
+                printf("Unsupported operator '%c'.\n", *op);
+                assert(0);
+        }
+    }
+    // Should never reach here
+    return 0;
+}
+
+int check_parentheses(char *p, char *q) {
+    if (*p != '(') return 0;
+    p++;
+    q--;
+    int position = 0;
+    while (p <= q) {
+        if (*p == '(') {
+            position++;
+        }
+        else if (*p == ')') {
+            if (position == 0) return 0;  // 没有与之匹配的左括号
+            position--;  // 先减少位置
+        }
+        p++;
+    }
+    return position == 0;  // 如果栈空，返回1，表示匹配
+}
+char *get_main_op_site(char *p, char *q){
+    char stack[32];
+    char* op_position[32];
+    int position = 0;
+    while(p<=q){
+        if (*p == '(' || *p =='+' || *p == '*'||*p == '/'|| *p == '-'){
+            op_position[position] = p;
+            stack[position] = *p;
+            position ++;
+        }
+        else if (*p == ')'){
+            while (stack[--position]!='('){
+            }
+        }
+        p++;
+    }
+    if (position > 0) {
+        return op_position[position - 1];  // 返回最后一个运算符的位置
+    }
+    return NULL;
 }
