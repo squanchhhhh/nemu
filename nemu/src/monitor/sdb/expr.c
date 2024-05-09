@@ -99,9 +99,10 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-        tokens[i].type = rules[i].token_type;
-        strncpy(tokens[i].str,substr_start,substr_len);
-        tokens[i].str[substr_len] = '\0';
+        tokens[nr_token].type = rules[i].token_type;
+        strncpy(tokens[nr_token].str,substr_start,substr_len);
+        tokens[nr_token].str[substr_len] = '\0';
+        nr_token++;
         /*       
         switch (rules[i].token_type) {
           default: TODO();
@@ -127,7 +128,7 @@ word_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-  for (int i = 0 ;i<32;i++){
+  for (int i = 0 ;i<nr_token;i++){
     printf("%d-%s\n",tokens[i].type,tokens->str);
   }
   /* TODO: Insert codes to evaluate the expression. */
