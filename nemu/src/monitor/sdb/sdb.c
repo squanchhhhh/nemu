@@ -52,6 +52,9 @@ static int cmd_q(char *args) {
   return -1;
 }
 static int cmd_si(char *args){
+  if (args){
+    cpu_exec(*(uint64_t *)args);
+  }
   cpu_exec(1);
   return 0;
 }
@@ -65,7 +68,7 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-  { "si [N]","program excutes n steps", cmd_si},
+  { "si","program excutes n steps", cmd_si},
   /* TODO: Add more commands */
 };
 
