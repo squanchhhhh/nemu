@@ -142,7 +142,7 @@ word_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  word_t result = eval(final_expr, final_expr + strlen(final_expr));
+  word_t result = eval(final_expr, final_expr + strlen(final_expr)-1);
 
   free(final_expr);  // 释放动态分配的内存
   return result;
