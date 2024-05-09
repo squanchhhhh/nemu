@@ -18,6 +18,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
+#include <memory/paddr.h>
 
 static int is_batch_mode = false;
 
@@ -74,6 +75,34 @@ static int cmd_si(char *args) {
   cpu_exec(1);
   return 0;
 }
+static int cmd_x(char *args) {
+    char *length_str = strtok(NULL, " ");
+    if (length_str == NULL) {
+        printf("Error: No length specified.\n");
+        return -1;
+    }
+    int l = atoi(length_str);
+
+    char *offset_str = strtok(NULL, " ");
+    if (offset_str == NULL) {
+        printf("Error: No offset specified.\n");
+        return -1;
+    }
+    char *endptr;
+    paddr_t offset = strtoul(offset_str, &endptr, 16);
+    if (*endptr != '\0') {
+        printf("Error: Invalid offset format.\n");
+        return -1;
+    }
+
+    // 执行内存读取和打印
+    for (; l > 0; l--) {
+        uint32_t value = paddr_read(offset, 4);
+        printf("%d: %08x\n", offset, value);
+        offset += 4;
+    }
+    return 0;
+}
 static int cmd_info(char* args){
   if (args&&*args){
     if (strcmp(args,"r")==0){
@@ -97,7 +126,8 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si","program excutes n steps", cmd_si},
-  {"info","r to show regs,w to show monitor",cmd_info}
+  {"info","r to show regs,w to show monitor",cmd_info},
+  {"x","usage x [N] [EXPR]",cmd_x},
   /* TODO: Add more commands */
 };
 
