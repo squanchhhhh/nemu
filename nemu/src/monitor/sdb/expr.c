@@ -40,7 +40,7 @@ static struct rule {
   {" +", TK_NOTYPE},    // spaces
   {"\\+", TK_PLUS},     // plus
   {"==", TK_EQ},        // equal
-  {"\\d+", TK_NUM},     // digits
+  {"[0-9]+", TK_NUM},     // digits
   {"-", TK_MINUS},      // minus
   {"/", TK_DIV},        // division
   {"\\*",TK_MULT}
