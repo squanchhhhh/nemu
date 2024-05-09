@@ -98,7 +98,7 @@ static int cmd_x(char *args) {
     // 执行内存读取和打印
     for (; l > 0; l--) {
         uint32_t value = paddr_read(offset, 4);
-        printf("%d: %08x\n", offset, value);
+        printf("%x: %08x\n", offset, value);
         offset += 4;
     }
     return 0;
