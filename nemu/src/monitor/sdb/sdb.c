@@ -51,11 +51,27 @@ static int cmd_c(char *args) {
 static int cmd_q(char *args) {
   return -1;
 }
+/*
 static int cmd_si(char *args){
   if (args){
     cpu_exec(*(uint64_t *)args);
   }
   else{cpu_exec(1);}
+  return 0;
+}
+*/
+static int cmd_si(char *args) {
+  if (args && *args) {
+    // 确保 args 是一个数字字符串
+    char *endptr;
+    uint64_t num = strtoull(args, &endptr, 10); // 假设是十进制数字
+    if (*endptr == '\0') { // 确保整个字符串都是数字
+      cpu_exec(num);
+      return 0;
+    }
+  }
+  // 如果 args 为 NULL，或者转换失败，或者 args 不是纯数字
+  cpu_exec(1);
   return 0;
 }
 static int cmd_help(char *args);
