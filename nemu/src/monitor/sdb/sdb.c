@@ -115,6 +115,11 @@ static int cmd_info(char* args){
   }
   return 0;
 }
+static int cmd_p(char * args){
+    bool success = true;
+    expr(args,&success);
+    return 0;
+}
 static int cmd_help(char *args);
 
 static struct {
@@ -128,6 +133,7 @@ static struct {
   { "si","program excutes n steps", cmd_si},
   {"info","r to show regs,w to show monitor",cmd_info},
   {"x","usage x [N] [EXPR]",cmd_x},
+  {"p","p EXPR",cmd_p},
   /* TODO: Add more commands */
 };
 

@@ -21,25 +21,31 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ,
-
+  TK_NOTYPE = 256, 
+  TK_PLUS,
+  TK_MINUS,
+  TK_DIV,
+  TK_EQ,
+  TK_NUM,
+  TK_LEFTP,
+  TK_RIGHTP,
+  TK_MULT
   /* TODO: Add more token types */
-
 };
 
 static struct rule {
   const char *regex;
   int token_type;
 } rules[] = {
-
-  /* TODO: Add more rules.
-   * Pay attention to the precedence level of different rules.
-   */
-
   {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
+  {"\\+", TK_PLUS},     // plus
   {"==", TK_EQ},        // equal
+  {"\\d+", TK_NUM},     // digits
+  {"-", TK_MINUS},      // minus
+  {"/", TK_DIV},        // division
+  {"*",TK_MULT}
 };
+
 
 #define NR_REGEX ARRLEN(rules)
 
@@ -93,10 +99,14 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-
+        tokens[i].type = rules[i].token_type;
+        strncpy(tokens[i].str,substr_start,substr_len);
+        tokens[i].str[substr_len] = '\0';
+        /*       
         switch (rules[i].token_type) {
           default: TODO();
         }
+        */
 
         break;
       }
@@ -117,9 +127,10 @@ word_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-
+  for (int i = 0 ;i<32;i++){
+    printf("%d-%s\n",tokens[i].type,tokens->str);
+  }
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
 
   return 0;
 }
