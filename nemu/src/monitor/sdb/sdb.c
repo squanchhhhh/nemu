@@ -62,7 +62,7 @@ static int cmd_si(char *args){
 */
 static int cmd_si(char *args) {
   if (args && *args) {
-    // 确保 args 是一个数字字符串
+    // 确保 args不是一个空指针
     char *endptr;
     uint64_t num = strtoull(args, &endptr, 10); // 假设是十进制数字
     if (*endptr == '\0') { // 确保整个字符串都是数字
@@ -72,6 +72,18 @@ static int cmd_si(char *args) {
   }
   // 如果 args 为 NULL，或者转换失败，或者 args 不是纯数字
   cpu_exec(1);
+  return 0;
+}
+static int cmd_info(char* args){
+  if (args&&*args){
+    if (strcmp(args,"r")){
+      isa_reg_display();
+      return 0;
+    }
+  }else{
+    printf("usage info [r]");
+    return 0;
+  }
   return 0;
 }
 static int cmd_help(char *args);
@@ -85,6 +97,7 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si","program excutes n steps", cmd_si},
+  {"info","r to show regs,w to show monitor",cmd_info}
   /* TODO: Add more commands */
 };
 
