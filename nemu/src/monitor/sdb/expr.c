@@ -185,11 +185,11 @@ uint32_t eval(Token *p, Token *q) {
     } else if (p == q) {
         if (p->type == TK_REG) {
             return get_reg(p->str);
-        } else if (*p->str >= '0' && *p->str <= '9') {
-            return *p->str - '0';
-        } else {
-            printf("illegal\n");
-            assert(0);
+        }
+         else {
+            uint32_t num = 0;
+            sscanf(p->str, "%u", &num);
+            return num;
         }
     } else if (parentheses(p, q) == 1) {
         return eval(p + 1, q - 1);
