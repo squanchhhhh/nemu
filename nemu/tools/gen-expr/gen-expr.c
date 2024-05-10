@@ -19,7 +19,7 @@
 #include <time.h>
 #include <assert.h>
 #include <string.h>
-
+#include <time.h>
 // this should be enough
 static char buf[65536] = {};
 static char code_buf[65536 + 128] = {}; // a little larger than `buf`
@@ -30,9 +30,57 @@ static char *code_format =
 "  printf(\"%%u\", result); "
 "  return 0; "
 "}";
+static void gen_rand_op(){
+    const char ops[] = {'+', '-', '*', '/'};
+    int index = rand() % 4;
+    char op_str[2] = {ops[index], '\0'};
+    strcat(buf, op_str);
+  }
 
+static int choose(int n){
+  return rand()%n;
+}
+static void gen_num(){
+  char num_str[20];
+  int num = rand() % 100;  // 生成 0 到 99 之间的随机数
+  sprintf(num_str, "%d", num);
+  strcat(buf, num_str);
+}
+static void gen(char p){
+  char p_str[2] = {p, '\0'};
+  strcat(buf, p_str);
+}
 static void gen_rand_expr() {
-  buf[0] = '\0';
+  int complete = 0;  // 标志变量,用于跟踪表达式是否完整
+  
+  while (!complete) {
+    if (strlen(buf) >= 100) {
+      break;  // 如果达到长度限制,退出循环
+    }
+    
+    switch (choose(3)) {
+      case 0:
+        gen_num();
+        complete = 1;  // 生成数字后,表达式完整
+        break;
+      case 1:
+        gen('(');
+        gen_rand_expr();
+        if (strlen(buf) < 100) {
+          gen(')');
+          complete = 1;  // 生成括号表达式后,表达式完整
+        }
+        break;
+      default:
+        gen_rand_expr();
+        if (strlen(buf) < 100) {
+          gen_rand_op();
+          gen_rand_expr();
+          complete = 1;  // 生成二元运算表达式后,表达式完整
+        }
+        break;
+    }
+  }
 }
 
 int main(int argc, char *argv[]) {
@@ -44,6 +92,7 @@ int main(int argc, char *argv[]) {
   }
   int i;
   for (i = 0; i < loop; i ++) {
+    buf[0] = '\0';
     gen_rand_expr();
 
     sprintf(code_buf, code_format, buf);
