@@ -43,6 +43,7 @@ static struct rule {
     const char *regex;
     int token_type;
 } rules[] = {
+          {"0x[0-9A-Fa-f]+", TK_HEX_NUM},
         {" +",              TK_NOTYPE},    // spaces
         {"\\+",             TK_PLUS},     // plus
         {"==",              TK_EQ},        // equal
@@ -54,8 +55,8 @@ static struct rule {
         {"\\)",             TK_RIGHTP},     // right parentheses
         {"!=",              TK_NOTEQ},
         {"&&",              TK_AND},
-        {"\\$[rsgta][0-9]", TK_REG},
-        {"\\b0x[0-9A-Fa-f]+\\b", TK_HEX_NUM}
+        {"\\$[rsgta][0-9]", TK_REG}
+
 };
 
 
