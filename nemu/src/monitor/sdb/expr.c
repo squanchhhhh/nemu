@@ -174,7 +174,7 @@ word_t expr(char *e, bool *success) {
         return 0;
     }
     word_t result = eval(tokens, tokens + nr_token - 1);
-    printf("%d", result);
+    printf("%d\n", result);
     return result;
 }
 

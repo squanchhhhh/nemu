@@ -120,6 +120,10 @@ static int cmd_p(char * args){
     expr(args,&success);
     return 0;
 }
+static int cmd_w(char * args){
+  new_wp(args);
+  return 0;
+}
 static int cmd_help(char *args);
 
 static struct {
@@ -134,6 +138,7 @@ static struct {
   {"info","r to show regs,w to show monitor",cmd_info},
   {"x","usage x [N] [EXPR]",cmd_x},
   {"p","p EXPR",cmd_p},
+  {"w","w EXPR",cmd_w},
   /* TODO: Add more commands */
 };
 
