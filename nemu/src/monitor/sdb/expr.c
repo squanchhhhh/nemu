@@ -173,8 +173,9 @@ word_t expr(char *e, bool *success) {
         *success = false;
         return 0;
     }
+    *success = true;
     word_t result = eval(tokens, tokens + nr_token - 1);
-    printf("%d\n", result);
+    printf("%u\n", result);
     return result;
 }
 
