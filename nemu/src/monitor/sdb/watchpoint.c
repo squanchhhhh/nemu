@@ -61,7 +61,7 @@ void free_wp(WP *wp){
 }
 void step_watchpoint(){
     struct watchpoint* temp=head;
-    while (temp->next!=NULL){
+    while (temp!=NULL){
         bool s = 1;
         temp->new_value = expr(temp->expr_,&s);
         if(!s){
@@ -71,5 +71,6 @@ void step_watchpoint(){
         printf("watchpoint %d: %s\n",temp->NO,temp->expr_);
         printf("old value: %d\n",temp->old_value);
         printf("new value: %d\n",temp->new_value);
+        temp = temp->next;
 }}
 
