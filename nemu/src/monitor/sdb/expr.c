@@ -187,7 +187,7 @@ uint32_t eval(Token *p, Token *q) {
         if (p->type == TK_REG) {
             return get_reg(p->str);
         }
-         else {
+        else {
             uint32_t num = 0;
             sscanf(p->str, "%u", &num);
             return num;
